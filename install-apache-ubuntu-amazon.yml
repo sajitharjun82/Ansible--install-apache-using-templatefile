@@ -1,0 +1,41 @@
+---
+- name: "Install apche in ubuntu and Amazon"
+  hosts: all
+  become: yes
+  tasks:
+    - name: "amazon-install apache"
+      when: ansible_os_family == "RedHat"
+      yum:
+        name: httpd
+        state: present
+    - name: "Create index file"
+      when: ansible_os_family == "RedHat"
+      copy: 
+        content: "<h1>Amazon Site Test</h1>"
+        dest: /var/www/html/index.html
+    - name: "restart and enable apache service"
+      when: ansible_os_family == "RedHat"
+      service:
+        name: httpd
+        state: restarted
+        enabled: true
+    - name: "ubuntu-install-apache"
+      when: ansible_os_family == "Debian"
+      apt:
+        name: apache2
+        state: present
+    - name: "create index file"
+      when: ansible_os_family == "Debian"
+      copy:
+        content: "<h1>Ubuntu Site Test</h1>"
+        dest: /var/www/html/index.html
+    - name: "Restart/enable Apache service"
+      when: ansible_os_family == "Debian"
+      service: 
+        name: apache2
+        state: restarted
+        enabled: true
+
+
+
+   
