@@ -1,0 +1,23 @@
+---
+- name: "Installing Nginx and hosting a website"
+  hosts: amazon
+  become: yes
+  tasks:
+ 
+    - name: "Installing Nginx"
+      apt:
+        name: nginx
+        state: present 
+    
+ 
+    - name: "Copying website files to webserver"
+      copy:
+        src: ./website/
+        dest: /var/www/html/
+
+
+    - name: "Start service"
+      service:
+        name: nginx
+        state: restarted
+        enabled: true
