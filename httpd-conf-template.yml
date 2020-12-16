@@ -1,0 +1,37 @@
+---
+- name:
+  hosts: amazon
+  become: true
+  vars:
+    httpd_port: 80
+    httpd_owner: "apache"
+    httpd_group: "apache"
+  tasks:
+    - name: "Install Apache webserver"
+      yum:
+        name: httpd
+        state: present
+    - name: "Copying httpd conf file"
+      template:
+        src: httpd.conf.tmpl
+        dest: /etc/httpd/conf/httpd.conf
+        owner: "{{ httpd_owner }}"
+        group: "{{ httpd_group }}"
+    - name: "copying index.html"
+      copy:
+        content: "<h1><center>This is sample index.html</center></h1>"
+        dest: /var/www/html/index.html
+        owner: "{{ httpd_owner }}"
+        group: "{{ httpd_group }}"
+    - name: "Restart Apache service"
+      service:
+         name: httpd
+         state: restarted
+         enabled: true
+
+
+
+
+
+
+  
